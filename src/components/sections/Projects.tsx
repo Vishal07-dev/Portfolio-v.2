@@ -190,12 +190,12 @@ export default function Projects() {
           description="Hands-on projects that demonstrate full-stack development across the MEAN stack and beyond."
         />
 
-        {/* Featured — full width */}
+        {/* Featured (full width) */}
         <div className="mb-5">
           <ProjectCard project={featured} index={0} featured />
         </div>
 
-        {/* Others — 2 col grid */}
+        {/* Others (2 col grid) */}
         <div className="grid md:grid-cols-2 gap-5">
           {others.map((p, i) => (
             <ProjectCard key={p.id} project={p} index={i + 1} />

@@ -9,7 +9,7 @@ export const siteConfig = {
   tagline:
     "Building enterprise web applications with Angular, Node.js, and modern web technologies.",
   description:
-    "MEAN Stack Developer building enterprise web applications with Angular, Node.js, Express.js, and MongoDB. Open to new opportunities.",
+    "Vishal Rohera, MEAN stack & Next.js web developer based in Ahmedabad, India. Building enterprise web apps with Angular, Node.js, Express & MongoDB.",
   keywords: [
     "Vishal Rohera",
     "MEAN Stack Developer",
@@ -18,8 +18,13 @@ export const siteConfig = {
     "React Developer",
     "Next.js Developer",
     "Full Stack Developer",
+    "Web Developer",
     "TypeScript Developer",
+    "Web Developer in Ahmedabad",
+    "Next.js Developer Ahmedabad",
+    "Frontend Developer Ahmedabad",
     "Ahmedabad",
+    "Gujarat",
     "India",
   ],
 };
@@ -27,7 +32,7 @@ export const siteConfig = {
 export const aboutData = {
   paragraphs: [
     "I'm a MEAN Stack Developer building enterprise-grade web applications that serve real business needs. My work spans crafting scalable Angular frontends to designing RESTful APIs with Node.js and Express.",
-    "I hold a BCA from Silver Oak University and have hands-on production experience with the complete MEAN stack. Beyond my primary stack, I also work with React.js and Next.js — which gives me flexibility across modern frontend ecosystems.",
+    "I hold a BCA from Silver Oak University and have hands-on production experience with the complete MEAN stack. Beyond my primary stack, I also work with React.js and Next.js, which gives me flexibility across modern frontend ecosystems.",
     "I'm genuinely interested in AI-assisted development. I actively use tools like Google Gemini in my projects and apply prompt engineering to ship features faster and write better code.",
   ],
   highlights: [
@@ -48,7 +53,7 @@ export const experienceData = {
   companyUrl: "https://brainerhub.com",
   role: "MEAN Stack Developer",
   type: "Full-time",
-  duration: "Jan 2025 – Present",
+  duration: "Jan 2025 to Present",
   period: "1+ year",
   location: "Ahmedabad, Gujarat, India",
   description:
@@ -59,7 +64,7 @@ export const experienceData = {
     "Develop dashboards and reporting modules with data visualization components for business intelligence requirements",
     "Design and implement backend routes and middleware using Node.js and Express.js",
     "Write and optimize MongoDB queries, design data schemas aligned with application requirements",
-    "Participate in agile sprints — code reviews, debugging sessions, and estimation meetings",
+    "Participate in agile sprints including code reviews, debugging sessions, and estimation meetings",
     "Manage version control workflows using Git and GitLab including feature branches and merge requests",
   ],
   technologies: [
@@ -150,11 +155,11 @@ export const projectsData: Project[] = [
     title: "AI-Powered E-Commerce Platform",
     problem:
       "Gives small online sellers a complete storefront with payments and instant AI-driven customer support.",
-    role: "Solo Full-Stack Developer — built the frontend, payment flow, and AI chatbot end to end.",
+    role: "Solo Full-Stack Developer. Built the frontend, payment flow, and AI chatbot end to end.",
     description:
       "Full-featured e-commerce app with shopping cart, Stripe payment integration, invoice generation, order tracking, and an embedded Google Gemini AI chatbot for customer support.",
     longDescription:
-      "A comprehensive e-commerce solution featuring product catalogue, cart management, Stripe-powered checkout, invoice PDF generation, order tracking, and a Google Gemini AI chatbot that handles product queries and customer support — built as a solo full-stack project.",
+      "A comprehensive e-commerce solution featuring product catalogue, cart management, Stripe-powered checkout, invoice PDF generation, order tracking, and a Google Gemini AI chatbot that handles product queries and customer support, built as a solo full-stack project.",
     tech: ["React.js", "JavaScript", "Stripe", "Google Gemini API"],
     liveUrl: "https://ecommerce-frontend-three-ruby.vercel.app/",
     githubUrl: "https://github.com/Vishal07-dev/ecommerce-frontend",
@@ -171,9 +176,9 @@ export const projectsData: Project[] = [
     title: "FigoCare Healthcare Website",
     problem:
       "Gives a healthcare business a fast, SEO-optimized web presence that turns visitors into enquiries.",
-    role: "Solo Developer — owned design, build, and production deployment of the full project lifecycle.",
+    role: "Solo Developer. Owned design, build, and production deployment of the full project lifecycle.",
     description:
-      "Healthcare business website built with Next.js — responsive design, email integration, SEO-optimized, and fully deployed. Managed the complete project lifecycle independently.",
+      "Healthcare business website built with Next.js. Responsive design, email integration, SEO-optimized, and fully deployed. Managed the complete project lifecycle independently.",
     longDescription:
       "Designed and developed a healthcare business website from scratch using Next.js. Delivered responsive UI, email contact integration, on-page SEO optimization, and handled end-to-end deployment to production. Managed full project lifecycle as a solo developer.",
     tech: ["Next.js", "React.js", "JavaScript"],
@@ -187,7 +192,7 @@ export const projectsData: Project[] = [
     title: "Food Court Web Application",
     problem:
       "Lets a food court showcase its menu and take orders through a clean, responsive web experience.",
-    role: "Frontend Developer — built reusable React components and the responsive UI architecture.",
+    role: "Frontend Developer. Built reusable React components and the responsive UI architecture.",
     description:
       "Responsive food-ordering website with reusable React components, menu browsing, and clean modern UI built with Tailwind CSS.",
     longDescription:
@@ -205,14 +210,14 @@ export const publicationsData = [
     title: "A Beginner's Guide to Integrate APIs in Angular",
     subtitle: "Everything You Need to Know",
     description:
-      "A comprehensive technical guide covering API integration in Angular — HTTP requests, Angular services, RxJS observables, error handling, and best practices. Written for frontend developers building their first data-driven Angular applications.",
+      "A comprehensive technical guide covering API integration in Angular, including HTTP requests, Angular services, RxJS observables, error handling, and best practices. Written for frontend developers building their first data-driven Angular applications.",
     platform: "Medium",
     url: "https://medium.com/@roheravishal567/a-beginners-guide-to-integrate-apis-in-angular-everything-you-need-to-know-c6ea4d0d5351",
     tags: ["Angular", "REST APIs", "TypeScript", "RxJS"],
   },
 ];
 
-/* ─── Testimonials (placeholder — replace with real content) ─── */
+/* ─── Testimonials (placeholder, replace with real content) ─── */
 export type Testimonial = {
   name: string;
   role: string;
@@ -224,23 +229,23 @@ export const testimonialsData: Testimonial[] = [
     name: "Client Name",
     role: "Role · Company",
     quote:
-      "Placeholder testimonial — replace this with a short quote about working with Vishal. A sentence or two on what was delivered and the impact works best.",
+      "Placeholder testimonial. Replace this with a short quote about working with Vishal. A sentence or two on what was delivered and the impact works best.",
   },
   {
     name: "Client Name",
     role: "Role · Company",
     quote:
-      "Placeholder testimonial — replace this with a short quote highlighting reliability, communication, or technical quality.",
+      "Placeholder testimonial. Replace this with a short quote highlighting reliability, communication, or technical quality.",
   },
   {
     name: "Client Name",
     role: "Role · Company",
     quote:
-      "Placeholder testimonial — replace this with a short quote from a colleague or client you've worked with.",
+      "Placeholder testimonial. Replace this with a short quote from a colleague or client you've worked with.",
   },
 ];
 
-/* ─── Writing / Notes (placeholder — replace with real articles) ─── */
+/* ─── Writing / Notes (placeholder, replace with real articles) ─── */
 export type WritingNote = {
   title: string;
   date: string;

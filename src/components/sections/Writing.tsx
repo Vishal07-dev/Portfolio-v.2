@@ -17,7 +17,7 @@ export default function Writing() {
         <SectionHeader
           eyebrow="Writing / Notes"
           title="Writing & Notes"
-          description="Coming soon — articles on Angular, Node.js, and AI-assisted development."
+          description="Coming soon. Articles on Angular, Node.js, and AI-assisted development."
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">

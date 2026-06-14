@@ -132,7 +132,7 @@ export default function Hero() {
               <p className="text-ink-muted text-base md:text-lg leading-relaxed max-w-lg">
                 I build{" "}
                 <span className="text-ink font-medium">enterprise web applications</span>{" "}
-                with Angular and Node.js — scalable, fast, and production-ready.
+                with Angular and Node.js. Scalable, fast, and production-ready.
               </p>
             </motion.div>
 

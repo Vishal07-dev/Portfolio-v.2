@@ -42,7 +42,7 @@ export default function Contact() {
             </h2>
             <p className="text-ink-muted text-base md:text-lg leading-relaxed max-w-xl mx-auto">
               Open to new opportunities, collaborations, and technical conversations.
-              Whether you&apos;re a recruiter, an engineering team, or a fellow developer —
+              Whether you&apos;re a recruiter, an engineering team, or a fellow developer,
               my inbox is always open.
             </p>
           </AnimatedSection>

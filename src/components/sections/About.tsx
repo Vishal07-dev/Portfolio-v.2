@@ -106,7 +106,7 @@ export default function About() {
         <SectionHeader
           eyebrow="About Me"
           title="Who I Am"
-          description="The person behind the code — background, mindset, and what drives me."
+          description="The person behind the code. Background, mindset, and what drives me."
         />
 
         {/* ── BENTO GRID ── */}

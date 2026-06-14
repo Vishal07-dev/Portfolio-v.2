@@ -7,7 +7,7 @@ import { siteConfig } from "@/data/portfolio";
 export const metadata: Metadata = {
   metadataBase: new URL("https://vishalrohera.tech"),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.role}`,
+    default: `${siteConfig.name}, ${siteConfig.role} in Ahmedabad`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -21,23 +21,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     url: "https://vishalrohera.tech",
-    title: `${siteConfig.name} — ${siteConfig.role}`,
+    title: `${siteConfig.name}, ${siteConfig.role} in Ahmedabad`,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.role}`,
-      },
-    ],
+    // og:image is auto-injected from app/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — ${siteConfig.role}`,
+    title: `${siteConfig.name}, ${siteConfig.role} in Ahmedabad`,
     description: siteConfig.description,
-    images: ["/og-image.png"],
+    // twitter:image falls back to app/opengraph-image.tsx
   },
   robots: {
     index: true,
@@ -50,11 +43,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
+  // favicon + apple-touch-icon are auto-injected from app/icon.tsx & app/apple-icon.tsx
 };
 
 export const viewport: Viewport = {
