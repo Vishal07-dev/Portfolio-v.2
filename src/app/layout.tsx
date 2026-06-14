@@ -5,7 +5,7 @@ import "./globals.css";
 import { siteConfig } from "@/data/portfolio";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vishalrohera.dev"),
+  metadataBase: new URL("https://vishalrohera.tech"),
   title: {
     default: `${siteConfig.name} — ${siteConfig.role}`,
     template: `%s | ${siteConfig.name}`,
@@ -14,10 +14,13 @@ export const metadata: Metadata = {
   keywords: siteConfig.keywords,
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
+  alternates: {
+    canonical: "https://vishalrohera.tech",
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://vishalrohera.dev",
+    url: "https://vishalrohera.tech",
     title: `${siteConfig.name} — ${siteConfig.role}`,
     description: siteConfig.description,
     siteName: siteConfig.name,

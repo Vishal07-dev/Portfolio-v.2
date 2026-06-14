@@ -4,7 +4,9 @@ import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Experience from "@/components/sections/Experience";
 import Skills from "@/components/sections/Skills";
+import Writing from "@/components/sections/Writing";
 import Projects from "@/components/sections/Projects";
+import Testimonials from "@/components/sections/Testimonials";
 import Publications from "@/components/sections/Publications";
 import Contact from "@/components/sections/Contact";
 
@@ -16,7 +18,9 @@ export default function Home() {
       <About />
       <Experience />
       <Skills />
+      <Writing />
       <Projects />
+      <Testimonials />
       <Publications />
       <Contact />
       <Footer />

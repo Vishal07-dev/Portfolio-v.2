@@ -102,9 +102,21 @@ function ProjectCard({ project, index, featured }: { project: Project; index: nu
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-ink-muted leading-relaxed flex-1 mb-5">
+          <p className="text-sm text-ink-muted leading-relaxed mb-4">
             {project.description}
           </p>
+
+          {/* Problem solved */}
+          <div className="mb-3">
+            <p className="text-[0.65rem] font-semibold text-ink-subtle uppercase tracking-wider mb-1">Problem it solves</p>
+            <p className="text-sm text-ink-muted leading-relaxed">{project.problem}</p>
+          </div>
+
+          {/* My role */}
+          <div className="mb-4">
+            <p className="text-[0.65rem] font-semibold text-ink-subtle uppercase tracking-wider mb-1">My role</p>
+            <p className="text-sm text-ink-muted leading-relaxed">{project.role}</p>
+          </div>
 
           {/* Highlight tags */}
           <div className="flex flex-wrap gap-1.5 mb-5">
@@ -115,8 +127,9 @@ function ProjectCard({ project, index, featured }: { project: Project; index: nu
             ))}
           </div>
 
-          {/* Tech stack + CTA */}
-          <div className="border-t border-border pt-4 flex items-end justify-between gap-3 flex-wrap">
+          {/* Tech stack */}
+          <div className="mb-5 mt-auto">
+            <p className="text-[0.65rem] font-semibold text-ink-subtle uppercase tracking-wider mb-2">Tech stack</p>
             <div className="flex flex-wrap gap-1.5">
               {project.tech.map((t) => (
                 <span key={t} className="px-2.5 py-1 text-xs font-medium rounded-lg bg-accent/10 text-accent-light border border-accent/20">
@@ -124,16 +137,33 @@ function ProjectCard({ project, index, featured }: { project: Project; index: nu
                 </span>
               ))}
             </div>
+          </div>
+
+          {/* CTA buttons */}
+          <div className="border-t border-border pt-4 flex items-center gap-2.5 flex-wrap">
             {project.liveUrl && (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-1 text-xs text-ink-subtle hover:text-accent-light transition-colors group/lnk flex-shrink-0"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
+                style={{ background: "linear-gradient(135deg, #c084fc, #8b5cf6)", boxShadow: "0 0 18px rgba(139,92,246,0.3)" }}
               >
-                Live demo
-                <ArrowUpRight size={12} className="group-hover/lnk:translate-x-0.5 group-hover/lnk:-translate-y-0.5 transition-transform" />
+                <ExternalLink size={13} />
+                Live Link
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-ink-muted border border-border glass hover:border-border-accent hover:text-ink transition-all"
+              >
+                <Github size={13} />
+                GitHub
               </a>
             )}
           </div>

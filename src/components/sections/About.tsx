@@ -202,7 +202,7 @@ export default function About() {
               </div>
               <div className="space-y-2">
                 {[
-                  { dot: "bg-success", text: "Building at BrainerHub Solutions" },
+                  { dot: "bg-success", text: "Building enterprise web applications" },
                   { dot: "bg-accent", text: "Full MEAN stack development" },
                   { dot: "bg-pink-400", text: "AI-assisted workflows" },
                   { dot: "bg-sky-400", text: "Open to new opportunities" },

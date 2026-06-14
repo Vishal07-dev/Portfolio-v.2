@@ -102,7 +102,7 @@ export default function Hero() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
                 </span>
-                <span className="text-ink font-medium">{siteConfig.company}</span>
+                <span className="text-ink font-medium">{siteConfig.role}</span>
                 <span className="text-ink-subtle">·</span>
                 <span className="text-ink-subtle">Open to opportunities</span>
               </div>
@@ -133,8 +133,6 @@ export default function Hero() {
                 I build{" "}
                 <span className="text-ink font-medium">enterprise web applications</span>{" "}
                 with Angular and Node.js — scalable, fast, and production-ready.
-                Currently at{" "}
-                <span className="text-accent-light font-medium">BrainerHub Solutions</span>.
               </p>
             </motion.div>
 
@@ -261,7 +259,6 @@ export default function Hero() {
                 <div className="mb-4">
                   <h3 className="text-base font-bold text-ink">{siteConfig.name}</h3>
                   <p className="text-sm text-ink-muted mt-0.5">MEAN Stack Developer</p>
-                  <p className="text-xs text-ink-subtle mt-1">@ {siteConfig.company}</p>
                 </div>
 
                 {/* Tech icons */}
@@ -308,7 +305,7 @@ export default function Hero() {
                   style={{ background: "linear-gradient(135deg, rgba(192,132,252,0.3), rgba(99,102,241,0.3))" }}>
                   <Sparkles size={13} className="text-accent-light" />
                 </div>
-                <span className="text-xs text-ink-subtle font-medium">AI-Assisted</span>
+                <span className="text-xs text-ink-subtle font-medium">Shipped</span>
               </div>
               <div className="text-3xl font-bold gradient-text leading-none">3+</div>
               <div className="text-xs text-ink-subtle mt-1">Projects Shipped</div>
