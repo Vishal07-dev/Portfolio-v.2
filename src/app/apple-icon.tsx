@@ -15,9 +15,9 @@ export default function AppleIcon() {
           alignItems: "center",
           justifyContent: "center",
           fontSize: 96,
-          fontWeight: 700,
-          color: "#ffffff",
-          background: "linear-gradient(135deg, #f0abfc 0%, #c084fc 40%, #818cf8 100%)",
+          fontWeight: 600,
+          color: "#f2a33a",
+          background: "#11141c",
         }}
       >
         VR

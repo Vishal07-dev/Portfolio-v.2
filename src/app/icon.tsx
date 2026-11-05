@@ -15,10 +15,10 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           fontSize: 16,
-          fontWeight: 700,
-          color: "#ffffff",
+          fontWeight: 600,
+          color: "#f2a33a",
           borderRadius: 8,
-          background: "linear-gradient(135deg, #f0abfc 0%, #c084fc 40%, #818cf8 100%)",
+          background: "#11141c",
         }}
       >
         VR

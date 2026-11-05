@@ -1,40 +1,34 @@
-"use client";
-
-import AnimatedSection from "./AnimatedSection";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  eyebrow: string;
+  /** Route shown in the signature label, like "/projects" */
+  route: string;
   title: string;
   description?: string;
   className?: string;
-  align?: "left" | "center";
 };
 
-export default function SectionHeader({
-  eyebrow,
-  title,
-  description,
-  className,
-  align = "left",
-}: Props) {
+/**
+ * Section heading. The `GET /route` label is the site's signature detail,
+ * a nod to the REST work, and appears only here.
+ */
+export default function SectionHeader({ route, title, description, className }: Props) {
   return (
-    <AnimatedSection className={cn("mb-12 md:mb-16", className)}>
-      <div className={cn(align === "center" && "text-center")}>
-        <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-accent-light mb-4">
-          <span className="block w-6 h-px bg-accent-light opacity-60" />
-          {eyebrow}
-          <span className="block w-6 h-px bg-accent-light opacity-60" />
-        </span>
-        <h2 className="text-3xl md:text-4xl font-bold text-ink mb-4 leading-tight">
-          {title}
-        </h2>
-        {description && (
-          <p className="text-ink-muted text-base md:text-lg leading-relaxed max-w-2xl">
-            {description}
-          </p>
-        )}
-      </div>
-    </AnimatedSection>
+    <div data-reveal-group className={cn("mb-14 md:mb-20", className)}>
+      <p data-reveal className="mb-5 font-mono text-meta text-ink-muted">
+        <span className="text-accent">GET</span> <span data-scramble>{route}</span>
+      </p>
+      <h2
+        data-reveal
+        className="max-w-[18ch] text-[40px] font-medium leading-[0.98] tracking-[-0.04em] text-ink md:text-6xl lg:text-[72px]"
+      >
+        {title}
+      </h2>
+      {description && (
+        <p data-reveal className="mt-6 max-w-[36rem] text-lg leading-[1.6] text-ink-secondary">
+          {description}
+        </p>
+      )}
+    </div>
   );
 }

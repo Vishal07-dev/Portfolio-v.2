@@ -6,6 +6,11 @@ export const siteConfig = {
   linkedin: "https://www.linkedin.com/in/vishal-rohera-661038262/",
   github: "https://github.com/Vishal07-dev",
   resumeUrl: "/Vishal_Rohera_MEAN_Developer.pdf",
+  /** Portrait in /public, decoded in the hero console on GET /me */
+  photo: "/ME2.jpeg" as string | null,
+  /** Focal point of the photo (fractions of width, height) for square crops */
+  photoFocus: [0.64, 0.44] as [number, number],
+  photoZoom: 2.1,
   tagline:
     "Building enterprise web applications with Angular, Node.js, and modern web technologies.",
   description:
@@ -41,10 +46,10 @@ export const aboutData = {
     { label: "Location", value: "Ahmedabad, Gujarat" },
   ],
   stats: [
-    { number: "1+", label: "Year of Experience" },
-    { number: "3+", label: "Projects Shipped" },
+    { number: "1+", label: "Year of experience" },
+    { number: "3+", label: "Projects shipped" },
     { number: "2", label: "Tech Stacks" },
-    { number: "1", label: "Publication" },
+    { number: "1", label: "Published article" },
   ],
 };
 
@@ -147,6 +152,8 @@ export type Project = {
   githubUrl: string | null;
   featured: boolean;
   highlights: string[];
+  /** Screenshot of the live site in /public/projects */
+  image: string;
 };
 
 export const projectsData: Project[] = [
@@ -165,11 +172,12 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/Vishal07-dev/ecommerce-frontend",
     featured: true,
     highlights: [
-      "AI Chatbot",
-      "Stripe Payments",
-      "Invoice Generation",
-      "Order Tracking",
+      "AI chatbot",
+      "Stripe payments",
+      "Invoice generation",
+      "Order tracking",
     ],
+    image: "/projects/ecommerce.png",
   },
   {
     id: 2,
@@ -185,7 +193,8 @@ export const projectsData: Project[] = [
     liveUrl: "https://figocare-limited.vercel.app/",
     githubUrl: null,
     featured: false,
-    highlights: ["Solo Delivery", "SEO Optimized", "Email Integration", "Production"],
+    highlights: ["Solo delivery", "SEO optimized", "Email integration", "In production"],
+    image: "/projects/figocare.png",
   },
   {
     id: 3,
@@ -201,7 +210,8 @@ export const projectsData: Project[] = [
     liveUrl: "https://food-court-olive.vercel.app/",
     githubUrl: null,
     featured: false,
-    highlights: ["Responsive Design", "Component Library", "Modern UI"],
+    highlights: ["Responsive design", "Reusable components", "Menu browsing"],
+    image: "/projects/foodcourt.png",
   },
 ];
 
