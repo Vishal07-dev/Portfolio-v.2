@@ -15,71 +15,37 @@ export default function OpengraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "space-between",
           padding: "80px",
-          background: "#07070f",
-          backgroundImage:
-            "radial-gradient(circle at 80% 20%, rgba(139,92,246,0.35), transparent 45%), radial-gradient(circle at 10% 90%, rgba(217,70,239,0.25), transparent 45%)",
+          background: "#0b0d14",
+          color: "#eef0f5",
         }}
       >
-        {/* Monogram */}
-        <div
-          style={{
-            width: 96,
-            height: 96,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 24,
-            fontSize: 44,
-            fontWeight: 700,
-            color: "#ffffff",
-            marginBottom: 48,
-            background: "linear-gradient(135deg, #f0abfc 0%, #c084fc 40%, #818cf8 100%)",
-          }}
-        >
-          VR
+        <div style={{ display: "flex", fontSize: 26, color: "#7a8296", fontFamily: "monospace" }}>
+          <span style={{ color: "#f2a33a" }}>GET</span>
+          <span style={{ marginLeft: 14 }}>/vishalrohera.tech</span>
         </div>
 
-        {/* Name */}
-        <div
-          style={{
-            fontSize: 84,
-            fontWeight: 700,
-            color: "#ffffff",
-            lineHeight: 1.05,
-            letterSpacing: "-0.02em",
-          }}
-        >
-          {siteConfig.name}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ fontSize: 34, color: "#a3a9b8" }}>
+            {`${siteConfig.name}, MEAN stack developer in Ahmedabad`}
+          </div>
+          <div
+            style={{
+              fontSize: 76,
+              fontWeight: 500,
+              lineHeight: 1.06,
+              letterSpacing: "-0.03em",
+              marginTop: 24,
+              maxWidth: 960,
+            }}
+          >
+            I build enterprise web apps with Angular and Node.js
+          </div>
         </div>
 
-        {/* Role */}
-        <div
-          style={{
-            fontSize: 44,
-            fontWeight: 500,
-            marginTop: 16,
-            color: "#c4b5fd",
-          }}
-        >
-          {`${siteConfig.role} · Next.js · Web Developer`}
-        </div>
-
-        {/* Location + domain */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 24,
-            marginTop: 40,
-            fontSize: 30,
-            color: "#9ca3af",
-          }}
-        >
-          <span>📍 Ahmedabad, India</span>
-          <span style={{ color: "#4b5563" }}>•</span>
-          <span>vishalrohera.tech</span>
+        <div style={{ display: "flex", height: 2, background: "rgba(238,240,245,0.08)" }}>
+          <div style={{ width: 280, height: 2, background: "#f2a33a" }} />
         </div>
       </div>
     ),

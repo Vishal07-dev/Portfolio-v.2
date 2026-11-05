@@ -1,226 +1,261 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { ExternalLink, Github, Star, ArrowUpRight } from "lucide-react";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { projectsData, type Project } from "@/data/portfolio";
+import Image from "next/image";
+import { useRef } from "react";
+import { ArrowRight, ArrowUpRight, Github } from "lucide-react";
+import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
+import { projectsData, siteConfig, type Project } from "@/data/portfolio";
 
-/* ─── 3D tilt + spotlight card ─── */
-function ProjectCard({ project, index, featured }: { project: Project; index: number; featured?: boolean }) {
-  const cardRef = useRef<HTMLDivElement>(null);
+const host = (url: string | null) => (url ? new URL(url).host : "");
+const pad = (n: number) => String(n).padStart(2, "0");
 
-  /* Spotlight */
-  const [spotPos, setSpotPos] = useState({ x: 0, y: 0 });
-  const [spotOpacity, setSpotOpacity] = useState(0);
-
-  /* 3D tilt */
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [6, -6]), { stiffness: 200, damping: 20 });
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-6, 6]), { stiffness: 200, damping: 20 });
-  const scale   = useSpring(1, { stiffness: 300, damping: 25 });
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = cardRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mx.set((e.clientX - rect.left) / rect.width - 0.5);
-    my.set((e.clientY - rect.top) / rect.height - 0.5);
-    setSpotPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  const onLeave = () => {
-    mx.set(0);
-    my.set(0);
-    scale.set(1);
-    setSpotOpacity(0);
-  };
-
+function ProjectPanel({ project, index }: { project: Project; index: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ delay: index * 0.1, duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
-      style={{ perspective: 900 }}
+    <article
+      data-panel
+      className="grid grid-cols-1 items-center gap-8 border-t border-line py-14 lg:w-[min(80vw,1120px)] lg:shrink-0 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-12 lg:border-t-0 lg:py-0"
     >
-      <motion.div
-        ref={cardRef}
-        style={{ rotateX, rotateY, scale, transformStyle: "preserve-3d" }}
-        onMouseMove={onMove}
-        onMouseEnter={() => { scale.set(1.015); setSpotOpacity(1); }}
-        onMouseLeave={onLeave}
-        className="relative glass-card rounded-2xl border border-border overflow-hidden h-full transition-colors duration-300 hover:border-border-accent cursor-default"
+      {/* Browser frame with the live site */}
+      <div
+        data-frame
+        className="overflow-hidden rounded-[20px] border border-line-strong bg-bg-deep shadow-window"
       >
-        {/* Spotlight overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none z-10 rounded-2xl"
-          style={{
-            opacity: spotOpacity,
-            background: `radial-gradient(550px circle at ${spotPos.x}px ${spotPos.y}px, rgba(139,92,246,0.13), transparent 60%)`,
-            transition: "opacity 0.3s ease",
-          }}
-        />
-
-        {/* Gradient hover tint */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/0 to-purple-500/0 hover:from-accent/3 hover:to-purple-500/3 transition-all duration-500 rounded-2xl pointer-events-none z-0" />
-
-        <div className="relative z-20 p-6 flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              {featured && (
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs font-semibold">
-                  <Star size={10} fill="currentColor" />
-                  Featured
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-1 flex-shrink-0">
-              {project.githubUrl && (
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="p-2 rounded-lg text-ink-subtle hover:text-ink hover:bg-surface-elevated transition-all"
-                  aria-label="GitHub">
-                  <Github size={15} />
-                </a>
-              )}
-              {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="p-2 rounded-lg text-ink-subtle hover:text-accent-light hover:bg-accent/10 transition-all"
-                  aria-label="Live demo">
-                  <ExternalLink size={15} />
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Title */}
-          <h3 className="text-lg font-bold text-ink mb-3 leading-snug group-hover:text-accent-light transition-colors">
-            {project.title}
-          </h3>
-
-          {/* Description */}
-          <p className="text-sm text-ink-muted leading-relaxed mb-4">
-            {project.description}
-          </p>
-
-          {/* Problem solved */}
-          <div className="mb-3">
-            <p className="text-[0.65rem] font-semibold text-ink-subtle uppercase tracking-wider mb-1">Problem it solves</p>
-            <p className="text-sm text-ink-muted leading-relaxed">{project.problem}</p>
-          </div>
-
-          {/* My role */}
-          <div className="mb-4">
-            <p className="text-[0.65rem] font-semibold text-ink-subtle uppercase tracking-wider mb-1">My role</p>
-            <p className="text-sm text-ink-muted leading-relaxed">{project.role}</p>
-          </div>
-
-          {/* Highlight tags */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
-            {project.highlights.map((h) => (
-              <span key={h} className="px-2 py-1 text-xs rounded-md bg-surface-elevated text-ink-subtle border border-border">
-                {h}
-              </span>
-            ))}
-          </div>
-
-          {/* Tech stack */}
-          <div className="mb-5 mt-auto">
-            <p className="text-[0.65rem] font-semibold text-ink-subtle uppercase tracking-wider mb-2">Tech stack</p>
-            <div className="flex flex-wrap gap-1.5">
-              {project.tech.map((t) => (
-                <span key={t} className="px-2.5 py-1 text-xs font-medium rounded-lg bg-accent/10 text-accent-light border border-accent/20">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA buttons */}
-          <div className="border-t border-border pt-4 flex items-center gap-2.5 flex-wrap">
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
-                style={{ background: "linear-gradient(135deg, #c084fc, #8b5cf6)", boxShadow: "0 0 18px rgba(139,92,246,0.3)" }}
-              >
-                <ExternalLink size={13} />
-                Live Link
-              </a>
-            )}
-            {project.githubUrl && (
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-ink-muted border border-border glass hover:border-border-accent hover:text-ink transition-all"
-              >
-                <Github size={13} />
-                GitHub
-              </a>
-            )}
-          </div>
+        <div className="flex h-10 items-center gap-2 border-b border-line px-4">
+          <span className="h-2.5 w-2.5 rounded-full bg-surface-raised" />
+          <span className="h-2.5 w-2.5 rounded-full bg-surface-raised" />
+          <span className="h-2.5 w-2.5 rounded-full bg-surface-raised" />
+          <span className="ml-3 truncate font-mono text-meta text-ink-muted">
+            {host(project.liveUrl)}
+          </span>
         </div>
-      </motion.div>
-    </motion.div>
+        <div className="relative aspect-[16/10] overflow-hidden">
+          <Image
+            data-shot
+            src={project.image}
+            alt={`${project.title} home page`}
+            fill
+            sizes="(min-width: 1024px) 700px, 100vw"
+            className="object-cover object-top lg:scale-[1.12]"
+            priority={index === 0}
+          />
+        </div>
+      </div>
+
+      {/* Copy */}
+      <div data-copy className="min-w-0">
+        <p className="font-mono text-meta tabular-nums text-ink-muted">
+          {pad(index + 1)} / {pad(projectsData.length)}
+        </p>
+        <h3 className="mt-4 text-[32px] font-medium leading-[1.02] tracking-[-0.035em] text-ink md:text-[44px]">
+          {project.title}
+        </h3>
+        <p className="mt-5 text-lg leading-[1.55] text-ink-secondary">{project.problem}</p>
+
+        <dl className="mt-6 space-y-3 text-[15px] leading-6">
+          <div>
+            <dt className="text-ink-muted">My role</dt>
+            <dd className="mt-0.5 text-ink-secondary">{project.role}</dd>
+          </div>
+          <div>
+            <dt className="text-ink-muted">Highlights</dt>
+            <dd className="mt-0.5 text-ink-secondary">{project.highlights.join(", ")}</dd>
+          </div>
+        </dl>
+        <p className="mt-5 font-mono text-meta text-ink-muted">{project.tech.join("  ·  ")}</p>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
+              Open live site
+              <ArrowUpRight size={16} strokeWidth={1.5} />
+            </a>
+          )}
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+            >
+              <Github size={16} strokeWidth={1.5} />
+              Source
+            </a>
+          )}
+        </div>
+      </div>
+    </article>
   );
 }
 
 export default function Projects() {
-  const featured = projectsData.find((p) => p.featured)!;
-  const others   = projectsData.filter((p) => !p.featured);
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      const q = gsap.utils.selector(root);
+
+      // Large screens: the section pins and the projects scroll sideways
+      mm.add(`${MOTION_OK} and (min-width: 1024px)`, () => {
+        const track = q("[data-track]")[0] as HTMLElement;
+        const distance = () => track.scrollWidth - window.innerWidth;
+
+        const slide = gsap.to(track, {
+          x: () => -distance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: q("[data-pin]")[0],
+            start: "top top",
+            end: () => `+=${distance()}`,
+            pin: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        gsap.fromTo(
+          q("[data-progress]"),
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: "none",
+            transformOrigin: "left center",
+            scrollTrigger: {
+              trigger: q("[data-pin]")[0],
+              start: "top top",
+              end: () => `+=${distance()}`,
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+
+        q("[data-panel]").forEach((panel) => {
+          const frame = panel.querySelector("[data-frame]");
+          const shot = panel.querySelector("[data-shot]");
+          const copy = panel.querySelector("[data-copy]");
+
+          // Frame opens as the panel slides in
+          gsap.fromTo(
+            frame,
+            { clipPath: "inset(0% 0% 0% 30% round 20px)" },
+            {
+              clipPath: "inset(0% 0% 0% 0% round 20px)",
+              ease: "none",
+              scrollTrigger: {
+                trigger: panel,
+                containerAnimation: slide,
+                start: "left 95%",
+                end: "left 45%",
+                scrub: true,
+              },
+            }
+          );
+          // Screenshot drifts inside its frame
+          gsap.fromTo(
+            shot,
+            { xPercent: 5 },
+            {
+              xPercent: -5,
+              ease: "none",
+              scrollTrigger: {
+                trigger: panel,
+                containerAnimation: slide,
+                start: "left right",
+                end: "right left",
+                scrub: true,
+              },
+            }
+          );
+          gsap.from(copy, {
+            autoAlpha: 0,
+            x: 40,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: slide,
+              start: "left 75%",
+              end: "left 35%",
+              scrub: true,
+            },
+          });
+        });
+      });
+
+      // Smaller screens: a plain stacked list with a short reveal per project
+      mm.add(`${MOTION_OK} and (max-width: 1023px)`, () => {
+        q("[data-panel]").forEach((panel) => {
+          gsap.from(panel.children, {
+            autoAlpha: 0,
+            y: 16,
+            stagger: 0.08,
+            scrollTrigger: { trigger: panel, start: "top 80%", once: true },
+          });
+        });
+      });
+    },
+    { scope: root }
+  );
 
   return (
-    <section id="projects" className="section-padding relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(217,70,239,0.7), transparent)" }} />
-
-      <div className="max-w-6xl mx-auto px-5 md:px-8">
-        <SectionHeader
-          eyebrow="Projects"
-          title="What I've Built"
-          description="Hands-on projects that demonstrate full-stack development across the MEAN stack and beyond."
-        />
-
-        {/* Featured (full width) */}
-        <div className="mb-5">
-          <ProjectCard project={featured} index={0} featured />
-        </div>
-
-        {/* Others (2 col grid) */}
-        <div className="grid md:grid-cols-2 gap-5">
-          {others.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i + 1} />
-          ))}
-        </div>
-
-        {/* GitHub CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="mt-10 flex justify-center"
+    <section id="projects" ref={root} className="border-t border-line">
+      <div
+        data-pin
+        className="relative lg:flex lg:h-screen lg:flex-col lg:justify-center lg:overflow-hidden"
+      >
+        <div
+          data-track
+          className="page-x flex flex-col py-24 md:py-32 lg:mx-0 lg:w-max lg:max-w-none lg:flex-row lg:items-center lg:gap-[10vw] lg:px-[max(32px,calc((100vw-1200px)/2+32px))] lg:py-0"
         >
-          <a
-            href="https://github.com/Vishal07-dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-2.5 px-6 py-3 rounded-xl glass border border-border hover:border-border-accent text-sm font-medium text-ink-muted hover:text-ink transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card"
-          >
-            <Github size={16} />
-            More on GitHub
-            <ArrowUpRight size={13} className="text-ink-subtle group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </a>
-        </motion.div>
+          {/* Intro panel */}
+          <div className="pb-6 lg:w-[30vw] lg:max-w-[440px] lg:shrink-0 lg:pb-0">
+            <p className="mb-5 font-mono text-meta text-ink-muted">
+              <span className="text-accent">GET</span> <span data-scramble>/projects</span>
+            </p>
+            <h2 className="text-[48px] font-medium leading-[0.95] tracking-[-0.045em] text-ink md:text-7xl lg:text-[88px]">
+              Built and shipped
+            </h2>
+            <p className="mt-6 max-w-[30rem] text-lg leading-[1.6] text-ink-secondary">
+              Three live projects. Each one is open, so you can click through the real thing.
+            </p>
+            <p className="mt-10 hidden items-center gap-2 font-mono text-meta text-ink-muted lg:flex">
+              Keep scrolling <ArrowRight size={14} strokeWidth={1.5} />
+            </p>
+          </div>
+
+          {projectsData.map((p, i) => (
+            <ProjectPanel key={p.id} project={p} index={i} />
+          ))}
+
+          {/* Outro panel */}
+          <div className="border-t border-line pt-10 lg:w-[26vw] lg:shrink-0 lg:border-t-0 lg:pt-0">
+            <p className="text-2xl leading-[1.2] tracking-[-0.02em] text-ink md:text-[32px]">
+              More experiments and source code live on GitHub
+            </p>
+            <a
+              href={siteConfig.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary mt-8"
+            >
+              <Github size={16} strokeWidth={1.5} />
+              github.com/Vishal07-dev
+              <ArrowUpRight size={16} strokeWidth={1.5} />
+            </a>
+          </div>
+        </div>
+
+        {/* Progress across the gallery */}
+        <div className="page-x absolute inset-x-0 bottom-10 hidden lg:block">
+          <span className="relative block h-px bg-line-strong">
+            <span data-progress className="absolute inset-0 bg-accent" />
+          </span>
+        </div>
       </div>
     </section>
   );

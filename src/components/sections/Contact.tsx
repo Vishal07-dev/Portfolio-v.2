@@ -1,163 +1,264 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, Linkedin, Github, MapPin, Copy, Check, ArrowRight, Sparkles } from "lucide-react";
-import AnimatedSection from "@/components/ui/AnimatedSection";
-import SpotlightCard from "@/components/ui/SpotlightCard";
+import { useRef, useState } from "react";
+import { ArrowUp, ArrowUpRight, Check, Copy, CornerDownLeft } from "lucide-react";
+import { useReveal } from "@/components/ui/useReveal";
+import { scrollToId } from "@/lib/gsap";
+import { cn } from "@/lib/utils";
 import { siteConfig } from "@/data/portfolio";
 
-export default function Contact() {
-  const [copied, setCopied] = useState(false);
+/** Web3Forms access key (public by design). Set NEXT_PUBLIC_WEB3FORMS_KEY in .env.local and on the host. */
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 
-  const copyEmail = async () => {
+const LINKS = [
+  { label: "LinkedIn", detail: "vishal-rohera", href: siteConfig.linkedin, external: true },
+  { label: "GitHub", detail: "Vishal07-dev", href: siteConfig.github, external: true },
+  { label: "Resume", detail: "Download PDF", href: siteConfig.resumeUrl, external: false },
+];
+
+function JsonField({ k, v, last }: { k: string; v: string; last?: boolean }) {
+  return (
+    <div className="whitespace-pre-wrap break-words pl-4">
+      <span className="text-ink">&quot;{k}&quot;</span>
+      <span className="text-ink-muted">: </span>
+      {v ? (
+        <span className="text-accent">{JSON.stringify(v)}</span>
+      ) : (
+        <span className="text-ink-muted/60">&quot;…&quot;</span>
+      )}
+      {!last && <span className="text-ink-muted">,</span>}
+    </div>
+  );
+}
+
+export default function Contact() {
+  const root = useRef<HTMLElement>(null);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [copied, setCopied] = useState(false);
+  const honeypot = useRef<HTMLInputElement>(null);
+  useReveal(root);
+
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+    if (status === "sent" || status === "error") setStatus("idle");
+  };
+
+  const ready = Boolean(form.name.trim() && form.message.trim()) && status !== "sending";
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!ready) return;
+    // Bots fill the hidden field; people never see it
+    if (honeypot.current?.checked) return;
+
+    const name = form.name.trim();
+    const subject = `Portfolio message from ${name}`;
+
+    // Without a Web3Forms key, fall back to the visitor's email app
+    if (!WEB3FORMS_KEY) {
+      const body = `${form.message.trim()}\n\n${name}${form.email ? `\n${form.email.trim()}` : ""}`;
+      window.location.href = `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return;
+    }
+
+    setStatus("sending");
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject,
+          from_name: "vishalrohera.tech",
+          name,
+          email: form.email.trim() || undefined,
+          message: form.message.trim(),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.success === false) throw new Error(data.message || "Request failed");
+      setStatus("sent");
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  const copy = async () => {
     try {
       await navigator.clipboard.writeText(siteConfig.email);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2200);
-    } catch { /* ignore */ }
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable */
+    }
   };
 
+  const field =
+    "w-full rounded-lg border border-line bg-surface px-3 text-[15px] text-ink outline-none transition-colors duration-150 placeholder:text-ink-muted focus:border-line-strong";
+
   return (
-    <section id="contact" className="section-padding relative overflow-hidden">
-      <div className="absolute inset-0 bg-bg-subtle" />
-
-      {/* Aurora blobs */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full blur-3xl opacity-15 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(139,92,246,0.6) 0%, rgba(217,70,239,0.3) 50%, transparent 75%)" }} />
-
-      <div className="relative z-10 max-w-6xl mx-auto px-5 md:px-8">
-        <div className="max-w-3xl mx-auto">
-
-          {/* Heading */}
-          <AnimatedSection className="text-center mb-12">
-            <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-accent-light mb-4">
-              <span className="block w-6 h-px bg-accent-light opacity-60" />
-              Get In Touch
-              <span className="block w-6 h-px bg-accent-light opacity-60" />
-            </span>
-            <h2 className="text-3xl md:text-5xl font-bold text-ink mb-4 leading-tight">
-              Let&apos;s Build Something{" "}
-              <span className="gradient-text-animate">Together</span>
-            </h2>
-            <p className="text-ink-muted text-base md:text-lg leading-relaxed max-w-xl mx-auto">
-              Open to new opportunities, collaborations, and technical conversations.
-              Whether you&apos;re a recruiter, an engineering team, or a fellow developer,
-              my inbox is always open.
+    <section id="contact" ref={root} className="section-y border-t border-line">
+      <div className="page-x">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
+          {/* Heading and direct links */}
+          <div data-reveal-group>
+            <p data-reveal className="mb-5 font-mono text-meta text-ink-muted">
+              <span className="text-accent">POST</span> <span data-scramble>/contact</span>
             </p>
-          </AnimatedSection>
-
-          {/* Primary Email Card */}
-          <AnimatedSection delay={0.1} className="mb-4">
-            <SpotlightCard
-              className="glass-card border border-border-accent hover:shadow-glow transition-all duration-400"
-              spotlightColor="rgba(139, 92, 246, 0.12)"
+            <h2
+              data-reveal
+              className="text-[40px] font-medium leading-[0.98] tracking-[-0.04em] text-ink md:text-6xl lg:text-[72px]"
             >
-              <div className="p-6 flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ background: "linear-gradient(135deg, rgba(192,132,252,0.3), rgba(99,102,241,0.3))" }}>
-                    <Mail size={20} className="text-accent-light" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-ink-subtle uppercase tracking-wider mb-1">Primary Email</p>
-                    <p className="text-sm md:text-base font-semibold text-ink">{siteConfig.email}</p>
-                  </div>
-                </div>
+              Write to me
+            </h2>
+            <p data-reveal className="mt-6 max-w-[30rem] text-lg leading-[1.6] text-ink-secondary">
+              Hiring an Angular or Node developer, or need one for a project? Send a request and it
+              lands straight in my inbox.
+            </p>
 
-                <div className="flex items-center gap-2">
-                  <button onClick={copyEmail}
-                    className="flex items-center gap-2 px-3.5 py-2 rounded-lg glass border border-border hover:border-border-accent text-sm text-ink-muted hover:text-ink transition-all">
-                    {copied ? (
-                      <><Check size={14} className="text-success" /><span className="text-success">Copied!</span></>
-                    ) : (
-                      <><Copy size={14} />Copy</>
-                    )}
-                  </button>
-                  <a href={`mailto:${siteConfig.email}`}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
-                    style={{ background: "linear-gradient(135deg, #c084fc, #8b5cf6)", boxShadow: "0 0 20px rgba(139,92,246,0.35)" }}>
-                    Send Email
-                    <ArrowRight size={14} />
-                  </a>
-                </div>
-              </div>
-            </SpotlightCard>
-          </AnimatedSection>
+            <div data-reveal className="mt-10 flex flex-wrap items-center gap-3">
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="text-lg text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-accent"
+              >
+                {siteConfig.email}
+              </a>
+              <button onClick={copy} className="btn-secondary h-9 px-3" aria-label="Copy email address">
+                {copied ? (
+                  <Check size={16} strokeWidth={1.5} className="text-positive" />
+                ) : (
+                  <Copy size={16} strokeWidth={1.5} />
+                )}
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
 
-          {/* Social cards */}
-          <div className="grid sm:grid-cols-2 gap-4 mb-6">
-            {[
-              {
-                icon: <Linkedin size={20} />,
-                label: "LinkedIn",
-                handle: "vishal-rohera-661038262",
-                href: siteConfig.linkedin,
-                desc: "Connect professionally",
-                border: "hover:border-blue-500/40",
-                iconBg: "from-blue-500/20 to-blue-600/10",
-                iconColor: "text-blue-400",
-                spotColor: "rgba(59,130,246,0.1)",
-              },
-              {
-                icon: <Github size={20} />,
-                label: "GitHub",
-                handle: "Vishal07-dev",
-                href: siteConfig.github,
-                desc: "See my open-source work",
-                border: "hover:border-slate-500/40",
-                iconBg: "from-slate-500/20 to-slate-600/10",
-                iconColor: "text-slate-300",
-                spotColor: "rgba(148,163,184,0.1)",
-              },
-            ].map((link) => (
-              <AnimatedSection key={link.label} delay={0.15}>
-                <SpotlightCard
-                  className={`glass-card border border-border transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover ${link.border}`}
-                  spotlightColor={link.spotColor}
-                  borderOnHover={false}
+            <div data-reveal className="mt-10 divide-y divide-line border-y border-line">
+              {LINKS.map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : { download: true })}
+                  className="group flex items-center justify-between gap-4 py-4"
                 >
-                  <a href={link.href} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-5 group">
-                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center ${link.iconBg} ${link.iconColor} flex-shrink-0`}>
-                      {link.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-ink-subtle mb-0.5">{link.label}</p>
-                      <p className="text-sm font-semibold text-ink truncate">@{link.handle}</p>
-                      <p className="text-xs text-ink-subtle mt-0.5">{link.desc}</p>
-                    </div>
-                    <ArrowRight size={14} className="ml-auto text-ink-subtle group-hover:translate-x-1 transition-transform flex-shrink-0" />
-                  </a>
-                </SpotlightCard>
-              </AnimatedSection>
-            ))}
+                  <span className="flex items-baseline gap-3">
+                    <span className="text-base text-ink">{l.label}</span>
+                    <span className="font-mono text-meta text-ink-muted">{l.detail}</span>
+                  </span>
+                  <ArrowUpRight
+                    size={18}
+                    strokeWidth={1.5}
+                    className="text-ink-muted transition-[color,transform] duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+                  />
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Location + status */}
-          <AnimatedSection delay={0.3}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-ink-subtle">
-              <div className="flex items-center gap-1.5">
-                <MapPin size={13} className="text-accent-light" />
-                {siteConfig.location}
-              </div>
-              <span className="hidden sm:block w-1 h-1 rounded-full bg-border" />
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                <span className="text-success font-medium">Available</span>
-                <span className="text-ink-subtle">for remote & hybrid roles</span>
-              </div>
+          {/* Request composer */}
+          <form
+            data-reveal-group
+            onSubmit={submit}
+            className="overflow-hidden rounded-[20px] border border-line-strong bg-bg-deep shadow-window"
+          >
+            <div data-reveal className="flex items-center gap-2 border-b border-line p-3">
+              <span className="rounded-md bg-accent-soft px-2 py-1 font-mono text-[12px] font-medium text-accent">
+                POST
+              </span>
+              <span className="truncate font-mono text-[13px] text-ink-muted">
+                api.vishalrohera.tech/v1<span className="text-ink">/contact</span>
+              </span>
             </div>
-          </AnimatedSection>
 
-          {/* Sparkle footer note */}
-          <AnimatedSection delay={0.4} className="mt-10 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border text-xs text-ink-subtle">
-              <Sparkles size={12} className="text-accent-light" />
-              Usually responds within 24 hours
+            <input
+              ref={honeypot}
+              type="checkbox"
+              name="botcheck"
+              tabIndex={-1}
+              autoComplete="off"
+              className="hidden"
+              aria-hidden
+            />
+            <div data-reveal className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 md:p-5">
+              <label className="block">
+                <span className="mb-1.5 block font-mono text-[12px] text-ink-muted">name</span>
+                <input value={form.name} onChange={set("name")} required className={cn(field, "h-11")} placeholder="Your name" />
+              </label>
+              <label className="block">
+                <span className="mb-1.5 block font-mono text-[12px] text-ink-muted">email</span>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={set("email")}
+                  className={cn(field, "h-11")}
+                  placeholder="So I can reply"
+                />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className="mb-1.5 block font-mono text-[12px] text-ink-muted">message</span>
+                <textarea
+                  value={form.message}
+                  onChange={set("message")}
+                  required
+                  rows={4}
+                  className={cn(field, "resize-none py-2.5")}
+                  placeholder="What are you building?"
+                />
+              </label>
             </div>
-          </AnimatedSection>
+
+            {/* Live body preview */}
+            <div data-reveal className="border-t border-line bg-surface/40 p-4 font-mono text-[12px] leading-[1.7] md:p-5 md:text-[13px]">
+              <p className="mb-1 text-ink-muted">body</p>
+              <span className="text-ink-muted">{"{"}</span>
+              <JsonField k="name" v={form.name} />
+              <JsonField k="email" v={form.email} />
+              <JsonField k="message" v={form.message} last />
+              <span className="text-ink-muted">{"}"}</span>
+            </div>
+
+            <div data-reveal className="flex flex-wrap items-center justify-between gap-3 border-t border-line p-4 md:p-5">
+              <p className="font-mono text-[12px] text-ink-muted">
+                {status === "sending" ? (
+                  "sending…"
+                ) : status === "sent" ? (
+                  <>
+                    <span className="text-positive">200 OK</span> · delivered, I&apos;ll reply soon
+                  </>
+                ) : status === "error" ? (
+                  <>
+                    <span className="text-negative">500</span> · didn&apos;t go through, email me directly
+                  </>
+                ) : ready ? (
+                  "ready to send"
+                ) : (
+                  "name and message are required"
+                )}
+              </p>
+              <button type="submit" disabled={!ready} className="btn-primary disabled:cursor-not-allowed disabled:opacity-40">
+                {status === "sending" ? "Sending" : "Send request"}
+                <CornerDownLeft size={14} strokeWidth={1.5} />
+              </button>
+            </div>
+          </form>
         </div>
+
+        <footer className="mt-24 flex flex-col gap-4 border-t border-line pt-6 text-sm text-ink-muted md:mt-32 md:flex-row md:items-center md:justify-between">
+          <span>
+            © {new Date().getFullYear()} {siteConfig.name}
+          </span>
+          <span className="hidden font-mono text-meta md:inline">
+            Press <kbd className="rounded border border-line-strong bg-surface-raised px-1.5 py-0.5 text-ink">/</kbd> to jump anywhere
+          </span>
+          <button
+            onClick={() => scrollToId("hero")}
+            className="inline-flex items-center gap-1.5 self-start transition-colors hover:text-ink md:self-auto"
+          >
+            Back to top <ArrowUp size={14} strokeWidth={1.5} />
+          </button>
+        </footer>
       </div>
     </section>
   );

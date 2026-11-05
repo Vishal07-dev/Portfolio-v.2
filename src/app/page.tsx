@@ -1,29 +1,34 @@
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import SmoothScroll from "@/components/ui/SmoothScroll";
+import CommandPalette from "@/components/ui/CommandPalette";
+import ScrambleLabels from "@/components/ui/ScrambleLabels";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Experience from "@/components/sections/Experience";
 import Skills from "@/components/sections/Skills";
-import Writing from "@/components/sections/Writing";
 import Projects from "@/components/sections/Projects";
-import Testimonials from "@/components/sections/Testimonials";
 import Publications from "@/components/sections/Publications";
 import Contact from "@/components/sections/Contact";
 
+/*
+ * Testimonials and Writing (upcoming notes) are hidden until they have real
+ * content. Their data still lives in src/data/portfolio.ts, and the old
+ * components are in git history (commit 7a5e6d2).
+ */
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-bg">
+      <SmoothScroll />
+      <CommandPalette />
+      <ScrambleLabels />
       <Navbar />
       <Hero />
       <About />
       <Experience />
       <Skills />
-      <Writing />
       <Projects />
-      <Testimonials />
       <Publications />
       <Contact />
-      <Footer />
     </main>
   );
 }

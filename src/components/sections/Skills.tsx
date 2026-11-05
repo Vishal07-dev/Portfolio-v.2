@@ -1,163 +1,160 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Monitor, Server, Database, Wrench, Layers, Sparkles } from "lucide-react";
+import { useRef } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import InfiniteMarquee from "@/components/ui/InfiniteMarquee";
-import SpotlightCard from "@/components/ui/SpotlightCard";
+import { useReveal } from "@/components/ui/useReveal";
+import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
+import { skillsData } from "@/data/portfolio";
 
-const BASE = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
-
-/* ─── Marquee rows ─── */
-const ROW1 = [
-  { name: "Angular", icon: `${BASE}/angularjs/angularjs-original.svg` },
-  { name: "React.js", icon: `${BASE}/react/react-original.svg` },
-  { name: "Next.js", icon: `${BASE}/nextjs/nextjs-original.svg`, color: "white" },
-  { name: "TypeScript", icon: `${BASE}/typescript/typescript-original.svg` },
-  { name: "JavaScript", icon: `${BASE}/javascript/javascript-original.svg` },
-  { name: "HTML5", icon: `${BASE}/html5/html5-original.svg` },
-  { name: "CSS3", icon: `${BASE}/css3/css3-original.svg` },
-  { name: "Tailwind CSS", icon: `${BASE}/tailwindcss/tailwindcss-original.svg` },
-  { name: "Bootstrap", icon: `${BASE}/bootstrap/bootstrap-original.svg` },
+/* One request travelling through the stack. Scrolling moves it along. */
+const LAYERS = [
+  { name: "Angular", role: "Client", detail: "Components, services, RxJS" },
+  { name: "Express", role: "API", detail: "Routes, JWT middleware" },
+  { name: "Node.js", role: "Server", detail: "Business logic, services" },
+  { name: "MongoDB", role: "Data", detail: "Schemas, queries, indexes" },
 ];
 
-const ROW2 = [
-  { name: "Node.js", icon: `${BASE}/nodejs/nodejs-original.svg` },
-  { name: "Express.js", icon: `${BASE}/express/express-original.svg`, color: "white" },
-  { name: "MongoDB", icon: `${BASE}/mongodb/mongodb-original.svg` },
-  { name: "Git", icon: `${BASE}/git/git-original.svg` },
-  { name: "GitHub", icon: `${BASE}/github/github-original.svg`, color: "white" },
-  { name: "GitLab", icon: `${BASE}/gitlab/gitlab-original.svg` },
-  { name: "Postman", icon: `${BASE}/postman/postman-original.svg` },
-  { name: "REST APIs", color: "#8b5cf6" },
-  { name: "JWT Auth", color: "#e879f9" },
-];
-
-/* ─── Category grid ─── */
-const categories = [
-  {
-    icon: Monitor, label: "Frontend", color: "text-blue-400",
-    bg: "from-blue-500/10 to-sky-500/5 border-blue-500/15",
-    skills: ["Angular", "React.js", "Next.js", "TypeScript", "JavaScript", "HTML5", "CSS3", "Tailwind CSS", "Bootstrap"],
-    badgeClass: "bg-blue-500/10 text-blue-300 border-blue-500/20",
-  },
-  {
-    icon: Server, label: "Backend", color: "text-green-400",
-    bg: "from-green-500/10 to-emerald-500/5 border-green-500/15",
-    skills: ["Node.js", "Express.js"],
-    badgeClass: "bg-green-500/10 text-green-300 border-green-500/20",
-  },
-  {
-    icon: Database, label: "Database", color: "text-yellow-400",
-    bg: "from-yellow-500/10 to-orange-500/5 border-yellow-500/15",
-    skills: ["MongoDB"],
-    badgeClass: "bg-yellow-500/10 text-yellow-300 border-yellow-500/20",
-  },
-  {
-    icon: Wrench, label: "Tools & DevOps", color: "text-slate-400",
-    bg: "from-slate-500/10 to-zinc-500/5 border-slate-500/15",
-    skills: ["Git", "GitHub", "GitLab", "Postman"],
-    badgeClass: "bg-slate-500/10 text-slate-300 border-slate-500/20",
-  },
-  {
-    icon: Layers, label: "Concepts", color: "text-violet-400",
-    bg: "from-violet-500/10 to-purple-500/5 border-violet-500/15",
-    skills: ["REST APIs", "JWT Authentication", "Agile Development", "Debugging", "Problem Solving"],
-    badgeClass: "bg-violet-500/10 text-violet-300 border-violet-500/20",
-  },
-  {
-    icon: Sparkles, label: "AI & Emerging", color: "text-pink-400",
-    bg: "from-pink-500/10 to-rose-500/5 border-pink-500/15",
-    skills: ["AI-Assisted Development", "Prompt Engineering", "Gemini API"],
-    badgeClass: "bg-pink-500/10 text-pink-300 border-pink-500/20",
-  },
+const LOG = [
+  { tag: "angular", text: "GET /api/reports?period=q3" },
+  { tag: "express", text: "verifyJWT  ok" },
+  { tag: "node", text: "aggregate orders by week" },
+  { tag: "mongodb", text: "orders.find  1,284 docs  18 ms" },
+  { tag: "200", text: "JSON back to the dashboard  46 ms" },
 ];
 
 export default function Skills() {
-  return (
-    <section id="skills" className="section-padding relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(139,92,246,0.8), transparent)" }} />
+  const root = useRef<HTMLElement>(null);
+  useReveal(root);
 
-      <div className="max-w-6xl mx-auto px-5 md:px-8">
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      // Desktop: a packet moves across the four layers while you scroll
+      mm.add(`${MOTION_OK} and (min-width: 768px)`, () => {
+        const nodes = gsap.utils.toArray<HTMLElement>("[data-layer]");
+        const rings = gsap.utils.toArray<HTMLElement>("[data-layer-ring]");
+        const logs = gsap.utils.toArray<HTMLElement>("[data-log]");
+
+        gsap.set(rings, { opacity: 0 });
+        gsap.set(logs, { opacity: 0.25 });
+        gsap.set("[data-packet]", { left: "0%", opacity: 0 });
+        gsap.set("[data-track-fill]", { scaleX: 0, transformOrigin: "left center" });
+
+        // On large screens the diagram pins and the request plays out over the scroll
+        const pin = window.matchMedia("(min-width: 1024px) and (min-height: 700px)").matches;
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: pin
+            ? {
+                trigger: "[data-flow]",
+                start: "center center",
+                end: "+=1400",
+                pin: true,
+                scrub: 0.6,
+              }
+            : {
+                trigger: "[data-flow]",
+                start: "top 70%",
+                end: "bottom 35%",
+                scrub: 0.6,
+              },
+        });
+
+        const step = 1;
+        tl.to("[data-packet]", { opacity: 1, duration: 0.15 }, 0)
+          .to("[data-packet]", { left: "100%", duration: step * (nodes.length - 1) }, 0)
+          .to("[data-track-fill]", { scaleX: 1, duration: step * (nodes.length - 1) }, 0);
+
+        nodes.forEach((_, i) => {
+          tl.to(rings[i], { opacity: 1, duration: 0.2 }, i * step);
+          tl.to(logs[i], { opacity: 1, duration: 0.2 }, i * step);
+        });
+        tl.to(logs[logs.length - 1], { opacity: 1, duration: 0.2 }, (nodes.length - 1) * step + 0.2);
+      });
+
+      // Small screens: layers simply appear in order
+      mm.add(`${MOTION_OK} and (max-width: 767px)`, () => {
+        gsap.from("[data-layer]", {
+          autoAlpha: 0,
+          y: 10,
+          stagger: 0.06,
+          scrollTrigger: { trigger: "[data-flow]", start: "top 80%", once: true },
+        });
+      });
+    },
+    { scope: root }
+  );
+
+  return (
+    <section id="skills" ref={root} className="section-y border-t border-line">
+      <div className="page-x">
         <SectionHeader
-          eyebrow="Skills"
-          title="What I Work With"
-          description="A full-stack toolkit spanning Angular, Node.js, and the modern web ecosystem."
+          route="/skills"
+          title="The stack I ship with"
+          description="Most days a request goes through every one of these layers, and I write the code at each stop."
         />
 
-        {/* ── Dual Infinite Marquee ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6 }}
-          className="space-y-3 mb-14"
-        >
-          <InfiniteMarquee items={ROW1} direction="left" speed={40} />
-          <InfiniteMarquee items={ROW2} direction="right" speed={45} />
-        </motion.div>
+        {/* Request path, the moment of this section */}
+        <div data-flow className="card mb-16 p-5 md:p-8">
+          <div className="relative">
+            {/* Track between the centers of the first and last layer */}
+            <div className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-1/2 hidden h-px -translate-y-1/2 md:block">
+              <span className="absolute inset-0 bg-line-strong" />
+              <span data-track-fill className="absolute inset-0 bg-accent" />
+              <span
+                data-packet
+                className="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_0_4px_rgba(242,163,58,0.18)]"
+              />
+            </div>
 
-        {/* ── Category Cards Grid ── */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.map((cat, i) => {
-            const Icon = cat.icon;
-            return (
-              <motion.div
-                key={cat.label}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ delay: i * 0.07, duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
-              >
-                <SpotlightCard
-                  className={`h-full bg-gradient-to-br border ${cat.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover`}
-                  spotlightColor="rgba(255,255,255,0.05)"
-                  borderOnHover={false}
+            <ol className="relative grid gap-3 md:grid-cols-4 md:gap-6">
+              {LAYERS.map((l) => (
+                <li
+                  key={l.name}
+                  data-layer
+                  className="relative rounded-xl border border-line bg-bg-deep p-4 md:p-6"
                 >
-                  <div className="p-5">
-                    {/* Header */}
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-8 h-8 rounded-lg bg-bg/60 flex items-center justify-center ${cat.color}`}>
-                        <Icon size={16} />
-                      </div>
-                      <h3 className="text-sm font-semibold text-ink">{cat.label}</h3>
-                      <span className="ml-auto text-xs text-ink-subtle">{cat.skills.length}</span>
-                    </div>
+                  <span
+                    data-layer-ring
+                    className="pointer-events-none absolute inset-0 rounded-xl border border-accent/60"
+                  />
+                  <p className="font-mono text-meta text-ink-muted">{l.role}</p>
+                  <p className="mt-2 text-lg font-medium tracking-[-0.02em] text-ink md:mt-6 md:text-[28px]">{l.name}</p>
+                  <p className="mt-1 text-[13px] leading-5 text-ink-muted">{l.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
 
-                    {/* Skills */}
-                    <div className="flex flex-wrap gap-2">
-                      {cat.skills.map((skill, si) => (
-                        <motion.span
-                          key={skill}
-                          initial={{ opacity: 0, scale: 0.85 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true, margin: "-40px" }}
-                          transition={{ delay: i * 0.06 + si * 0.03 }}
-                          className={`px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all duration-200 cursor-default hover:scale-105 ${cat.badgeClass}`}
-                        >
-                          {skill}
-                        </motion.span>
-                      ))}
-                    </div>
-                  </div>
-                </SpotlightCard>
-              </motion.div>
-            );
-          })}
+          <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-bg-deep p-4 font-mono text-[12px] leading-6 md:p-6 md:text-[13px] md:leading-7">
+            {LOG.map((l) => (
+              <p key={l.tag} data-log className="whitespace-nowrap">
+                <span className={`whitespace-pre ${l.tag === "200" ? "text-positive" : "text-accent"}`}>
+                  {l.tag.padEnd(8, " ")}
+                </span>
+                <span className="whitespace-pre text-ink-secondary"> {l.text}</span>
+              </p>
+            ))}
+          </div>
         </div>
 
-        {/* Bottom label */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="text-center text-sm text-ink-subtle mt-10"
-        >
-          Continuously learning · Currently exploring AI integration in web development workflows
-        </motion.p>
+        {/* Full toolkit as a spec sheet */}
+        <dl data-reveal-group className="divide-y divide-line border-y border-line">
+          {skillsData.map((cat) => (
+            <div
+              key={cat.category}
+              data-reveal
+              className="grid gap-2 py-5 md:grid-cols-[220px_1fr_auto] md:items-baseline md:gap-8"
+            >
+              <dt className="text-base text-ink">{cat.category}</dt>
+              <dd className="text-base leading-7 text-ink-secondary">{cat.skills.join(", ")}</dd>
+              <dd className="hidden font-mono text-meta tabular-nums text-ink-muted md:block">
+                {String(cat.skills.length).padStart(2, "0")}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

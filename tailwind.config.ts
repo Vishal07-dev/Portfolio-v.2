@@ -1,5 +1,10 @@
 import type { Config } from "tailwindcss";
 
+/*
+ * Ink ramp (dark) + one amber accent.
+ * Direction: exact, steady, a little warm. The world is a developer's
+ * working screen: editor, terminal, API responses.
+ */
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,79 +15,43 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#07070f",
-          subtle: "#0a0a18",
+          DEFAULT: "#0b0d14", // page
+          deep: "#07080d", // deepest surface
         },
         surface: {
-          DEFAULT: "#101020",
-          elevated: "#14142a",
-          hover: "#18183a",
-        },
-        accent: {
-          DEFAULT: "#8b5cf6",
-          light: "#a78bfa",
-          fuchsia: "#e879f9",
-          dim: "rgba(139, 92, 246, 0.15)",
-          glow: "rgba(139, 92, 246, 0.3)",
+          DEFAULT: "#11141c", // card
+          raised: "#1a1e28", // active row, input, secondary button
         },
         ink: {
-          DEFAULT: "#e8e8f8",
-          muted: "#8a8aaa",
-          subtle: "#52526e",
+          DEFAULT: "#eef0f5", // primary text
+          secondary: "#a3a9b8",
+          muted: "#7a8296", // meta, captions, icons
         },
-        success: "#10b981",
-        border: "rgba(255, 255, 255, 0.06)",
-        "border-accent": "rgba(139, 92, 246, 0.25)",
-        "border-fuchsia": "rgba(217, 70, 239, 0.25)",
+        accent: {
+          DEFAULT: "#f2a33a", // amber, like a terminal cursor
+          soft: "rgba(242, 163, 58, 0.14)",
+        },
+        line: "rgba(238, 240, 245, 0.08)", // hairline
+        "line-strong": "rgba(238, 240, 245, 0.14)",
+        positive: "#4cc38a",
+        negative: "#e5484d",
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "monospace"],
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-name":
-          "linear-gradient(135deg, #f0abfc 0%, #c084fc 40%, #818cf8 100%)",
-        "gradient-card":
-          "linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(217,70,239,0.04) 100%)",
-        "gradient-accent":
-          "linear-gradient(135deg, #c084fc 0%, #818cf8 100%)",
-      },
-      animation: {
-        "fade-in": "fadeIn 0.6s ease-out forwards",
-        "slide-up": "slideUp 0.6s ease-out forwards",
-        "pulse-dot": "pulseDot 2s ease-in-out infinite",
-        "spin-slow": "spin 8s linear infinite",
-      },
-      keyframes: {
-        fadeIn: {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
-        slideUp: {
-          "0%": { transform: "translateY(24px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-        pulseDot: {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.5", transform: "scale(0.85)" },
-        },
-      },
-      boxShadow: {
-        glow: "0 0 40px rgba(139, 92, 246, 0.3)",
-        "glow-sm": "0 0 20px rgba(139, 92, 246, 0.2)",
-        "glow-fuchsia": "0 0 40px rgba(217, 70, 239, 0.25)",
-        card: "0 4px 24px rgba(0, 0, 0, 0.5)",
-        "card-hover": "0 8px 48px rgba(0, 0, 0, 0.6)",
-        glass: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.07)",
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
-        "8xl": ["6rem", { lineHeight: "1" }],
-        "9xl": ["8rem", { lineHeight: "1" }],
+        meta: ["12px", { lineHeight: "16px" }],
+      },
+      boxShadow: {
+        "top-hl": "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+        window: "0 24px 64px rgba(0, 0, 0, 0.45)",
       },
       transitionTimingFunction: {
-        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-        smooth: "cubic-bezier(0.21, 0.47, 0.32, 0.98)",
+        out: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      maxWidth: {
+        page: "1200px",
       },
     },
   },
