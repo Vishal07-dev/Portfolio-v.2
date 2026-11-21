@@ -159,23 +159,33 @@ export type Project = {
 export const projectsData: Project[] = [
   {
     id: 1,
-    title: "AI-Powered E-Commerce Platform",
+    title: "KŌRA, a clothing store with an AI assistant",
     problem:
-      "Gives small online sellers a complete storefront with payments and instant AI-driven customer support.",
-    role: "Solo Full-Stack Developer. Built the frontend, payment flow, and AI chatbot end to end.",
+      "A full online clothing store with an AI shopping assistant and a private back office to run it.",
+    role: "Solo Full-Stack Developer. Built the store, the Studio back office and the AI assistant end to end.",
     description:
-      "Full-featured e-commerce app with shopping cart, Stripe payment integration, invoice generation, order tracking, and an embedded Google Gemini AI chatbot for customer support.",
+      "Editorial clothing store with filters, saved pieces, a sized bag, Stripe checkout with PDF receipts, the Ask KŌRA AI assistant and the KŌRA Studio admin panel.",
     longDescription:
-      "A comprehensive e-commerce solution featuring product catalogue, cart management, Stripe-powered checkout, invoice PDF generation, order tracking, and a Google Gemini AI chatbot that handles product queries and customer support, built as a solo full-stack project.",
-    tech: ["React.js", "JavaScript", "Stripe", "Google Gemini API"],
+      "Shoppers browse editions, filter by category and size, save pieces, and pay by card through Stripe, with a PDF receipt for every order. Ask KŌRA, built on the Gemini API, answers questions from the live catalogue and recommends only real products as tappable cards. KŌRA Studio runs the business: sales overview with charts, order status from paid to delivered, product placements on the home page, low-stock alerts, and team access with Owner, Admin and Staff roles and 48-hour invite links.",
+    tech: [
+      "Angular",
+      "NgRx",
+      "GSAP",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Stripe",
+      "Gemini API",
+    ],
     liveUrl: "https://ecommerce-frontend-three-ruby.vercel.app/",
     githubUrl: "https://github.com/Vishal07-dev/ecommerce-frontend",
     featured: true,
     highlights: [
-      "AI chatbot",
-      "Stripe payments",
-      "Invoice generation",
-      "Order tracking",
+      "Ask KŌRA AI assistant",
+      "Stripe checkout and PDF receipts",
+      "Studio admin with team roles",
+      "Accounts, addresses and saved pieces",
     ],
     image: "/projects/ecommerce.png",
   },
